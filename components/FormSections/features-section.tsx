@@ -18,13 +18,28 @@ interface Feature {
   sortOrder: string;
 }
 
-export default function FeaturesSection() {
+// Add new props interface
+interface FeaturesSectionProps {
+  initialSelected?: Feature[];
+  onComplete?: (selectedFeatures: Feature[]) => void;
+  standalone?: boolean;
+}
+
+export default function FeaturesSection({
+  initialSelected = [],
+  onComplete,
+  standalone = false,
+}: FeaturesSectionProps) {
   const [features, setFeatures] = useState<Feature[]>([]);
   const [filteredFeatures, setFilteredFeatures] = useState<Feature[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedFeatures, setSelectedFeatures] = useState<Feature[]>([]);
+
+  // Initialize with initialSelected if provided
+  const [selectedFeatures, setSelectedFeatures] =
+    useState<Feature[]>(initialSelected);
+
   const [activeGroup, setActiveGroup] = useState<string | null>(null);
   const [isSearchMode, setIsSearchMode] = useState(false);
 
@@ -162,18 +177,24 @@ export default function FeaturesSection() {
     setActiveGroup(group === activeGroup ? null : group);
   };
 
+  // Updated to support onComplete callback
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Selected features:", selectedFeatures);
-    alert("Features saved! Check console for details.");
+
+    if (onComplete) {
+      onComplete(selectedFeatures);
+    } else {
+      alert("Features saved! Check console for details.");
+    }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 p-6 bg-white rounded-md shadow"
+      className={standalone ? "" : "space-y-6 p-6 bg-white rounded-md shadow"}
     >
-      <h2 className="text-2xl font-bold">Features</h2>
+      {!standalone && <h2 className="text-2xl font-bold">Features</h2>}
 
       {/* Search bar */}
       <div className="relative">
@@ -367,9 +388,12 @@ export default function FeaturesSection() {
         )}
       </div>
 
-      <Button type="submit" className="bg-primary text-white">
-        Save Features
-      </Button>
+      {/* Only show the Save button when not in standalone mode */}
+      {!standalone && (
+        <Button type="submit" className="bg-primary text-white">
+          Save Features
+        </Button>
+      )}
     </form>
   );
 }

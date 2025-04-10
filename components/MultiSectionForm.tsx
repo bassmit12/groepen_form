@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import GeneralSettingsSection from "./FormSections/general-settings-section";
 import OwnerSection from "./FormSections/owner-section";
 import FeaturesSection from "./FormSections/features-section";
+import RoomsSection from "./FormSections/rooms-section";
 
 // Updated type with separate handling for checkbox values
 type FormDataType = {
@@ -37,6 +38,10 @@ const sections: SectionType[] = [
   {
     title: "Owner",
     component: <OwnerSection />,
+  },
+  {
+    title: "Rooms",
+    component: <RoomsSection />,
   },
   {
     title: "Features",
