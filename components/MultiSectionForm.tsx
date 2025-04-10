@@ -1,19 +1,35 @@
 "use client";
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import GeneralSettingsSection from "./FormSections/general-settings-section";
 import OwnerSection from "./FormSections/owner-section";
+import FeaturesSection from "./FormSections/features-section";
 
+// Updated type with separate handling for checkbox values
 type FormDataType = {
   ownerName?: string;
   ownerAddress?: string;
   pricePerNight?: number;
+  // Use a more specific index signature that doesn't include boolean
+  [key: string]: string | number | undefined | string[];
 };
 
-const sections = [
+// Define a type for form field objects
+type FormField = {
+  name: string;
+  label: string;
+  type: string;
+};
+
+type SectionType = {
+  title: string;
+  component?: React.ReactNode;
+  fields?: FormField[];
+};
+
+const sections: SectionType[] = [
   {
     title: "General settings",
     component: <GeneralSettingsSection />,
@@ -21,6 +37,10 @@ const sections = [
   {
     title: "Owner",
     component: <OwnerSection />,
+  },
+  {
+    title: "Features",
+    component: <FeaturesSection />,
   },
   {
     title: "Financial",
@@ -38,14 +58,32 @@ export default function MultiSectionForm() {
     pricePerNight: 0,
   });
 
+  // Keep track of checkbox states separately
+  const [checkboxValues, setCheckboxValues] = useState<Record<string, boolean>>(
+    {},
+  );
+
+  // Handle input changes with proper type checking
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { name, type, value, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+
+    // Handle checkbox inputs specially
+    if (e.target instanceof HTMLInputElement && e.target.type === "checkbox") {
+      // Update checkbox values separately
+      const isChecked = e.target.checked;
+      setCheckboxValues((prev) => ({
+        ...prev,
+        [name]: isChecked,
+      }));
+    } else {
+      // For all other inputs, just use the value
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   return (
@@ -60,6 +98,7 @@ export default function MultiSectionForm() {
               className={`block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 ${
                 activeSection === idx ? "bg-gray-200" : ""
               }`}
+              type="button" // Add type to prevent form submission
             >
               {section.title}
             </button>
@@ -77,7 +116,7 @@ export default function MultiSectionForm() {
               {sections[activeSection].title}
             </h2>
             <div className="space-y-4">
-              {sections[activeSection].fields.map((field: any) => (
+              {sections[activeSection].fields?.map((field) => (
                 <div key={field.name}>
                   <Label htmlFor={field.name}>{field.label}</Label>
                   <div className="mt-1">
@@ -87,7 +126,7 @@ export default function MultiSectionForm() {
                           id={field.name}
                           name={field.name}
                           type="checkbox"
-                          checked={!!formData[field.name]}
+                          checked={!!checkboxValues[field.name]}
                           onChange={handleInputChange}
                           className="h-4 w-4"
                         />
@@ -98,7 +137,12 @@ export default function MultiSectionForm() {
                         id={field.name}
                         name={field.name}
                         type={field.type}
-                        value={formData[field.name] ?? ""}
+                        // Convert to string/number appropriately for the input value
+                        value={
+                          field.type === "number"
+                            ? Number(formData[field.name] || 0)
+                            : String(formData[field.name] || "")
+                        }
                         onChange={handleInputChange}
                         className="max-w-md"
                       />
@@ -108,7 +152,7 @@ export default function MultiSectionForm() {
               ))}
             </div>
             <div className="pt-4">
-              <Button type="submit" className="bg-primary text-white">
+              <Button type="button" className="bg-primary text-white">
                 Save
               </Button>
             </div>
