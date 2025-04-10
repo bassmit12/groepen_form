@@ -1,38 +1,22 @@
 // groepen\app\api\features\route.ts
 import { NextResponse } from "next/server";
+import { getTokenFromApi } from "../token/tokenUtils";
 
-// Helper function to get the current token
+// Helper function to get the current token - directly using the utility function
 async function getToken(): Promise<string | null> {
   try {
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    console.log(`Requesting token from ${appUrl}/api/token`);
+    const token = await getTokenFromApi();
 
-    // Call our token API
-    const res = await fetch(`${appUrl}/api/token`, {
-      method: "GET",
-      cache: "no-store",
-      next: { revalidate: 0 },
-    });
-
-    if (!res.ok) {
-      console.error(`Token service error: ${res.status} ${res.statusText}`);
-      const errorText = await res.text();
-      console.error("Error details:", errorText);
-      return null;
-    }
-
-    const data = await res.json();
-
-    if (!data.accessToken) {
-      console.error("Token API did not return an access token:", data);
+    if (!token) {
+      console.error("Failed to obtain token from utility");
       return null;
     }
 
     // Only log first 20 chars and last 5 chars of the token for security
-    const tokenPreview = `${data.accessToken.substring(0, 20)}...${data.accessToken.substring(data.accessToken.length - 5)}`;
+    const tokenPreview = `${token.substring(0, 20)}...${token.substring(token.length - 5)}`;
     console.log("Features route received token preview:", tokenPreview);
 
-    return data.accessToken;
+    return token;
   } catch (error) {
     console.error("Error fetching token:", error);
     return null;
