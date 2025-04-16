@@ -32,25 +32,25 @@ type SectionType = {
 
 const sections: SectionType[] = [
   {
-    title: "General settings",
-    component: <GeneralSettingsSection />,
-  },
-  {
-    title: "Owner",
+    title: "Eigenaar",
     component: <OwnerSection />,
   },
   {
-    title: "Rooms",
-    component: <RoomsSection />,
+    title: "Algemene instellingen",
+    component: <GeneralSettingsSection />,
   },
   {
-    title: "Features",
+    title: "Kenmerken",
     component: <FeaturesSection />,
   },
   {
-    title: "Financial",
+    title: "Kamers",
+    component: <RoomsSection />,
+  },
+  {
+    title: "Financieel",
     fields: [
-      { name: "pricePerNight", label: "Price per night", type: "number" },
+      { name: "pricePerNight", label: "Prijs per nacht", type: "number" },
     ],
   },
 ];
@@ -65,12 +65,12 @@ export default function MultiSectionForm() {
 
   // Keep track of checkbox states separately
   const [checkboxValues, setCheckboxValues] = useState<Record<string, boolean>>(
-    {},
+    {}
   );
 
   // Handle input changes with proper type checking
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
 

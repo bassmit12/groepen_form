@@ -116,7 +116,7 @@ export default function OwnerSection() {
           owner.contactPerson
             ?.toLowerCase()
             .includes(searchQuery.toLowerCase()) ||
-          owner.companyName?.toLowerCase().includes(searchQuery.toLowerCase()),
+          owner.companyName?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       setFilteredOwners(filtered);
     }
@@ -198,7 +198,7 @@ export default function OwnerSection() {
 
   // Handle input changes for new owner form
   const handleNewOwnerInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { name, value } = e.target;
     setNewOwnerData((prev) => ({
@@ -317,7 +317,7 @@ export default function OwnerSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Owner section data:", formData);
-    alert("Form submitted! Check console for data.");
+    alert("Formulier ingediend! Controleer de console voor gegevens.");
   };
 
   return (
@@ -325,16 +325,16 @@ export default function OwnerSection() {
       onSubmit={handleSubmit}
       className="space-y-6 p-6 bg-white rounded-md shadow"
     >
-      <h2 className="text-2xl font-bold">Owner</h2>
+      <h2 className="text-2xl font-bold">Eigenaar</h2>
 
       {/* Owner Field - UPDATED */}
       <div className="relative">
-        <Label htmlFor="ownerSearch">Owner</Label>
+        <Label htmlFor="ownerSearch">Eigenaar</Label>
         <div className="flex gap-2 mt-1">
           <div className="relative flex-1">
             <Input
               id="ownerSearch"
-              placeholder="Search or select an owner"
+              placeholder="Zoek of selecteer een eigenaar"
               value={
                 selectedOwner
                   ? selectedOwner.companyName || selectedOwner.contactPerson
@@ -386,11 +386,11 @@ export default function OwnerSection() {
                   ))
                 ) : searchQuery ? (
                   <div className="px-4 py-3 text-sm text-gray-500">
-                    No owners found for {searchQuery}.
+                    Geen eigenaren gevonden voor {searchQuery}.
                   </div>
                 ) : (
                   <div className="px-4 py-3 text-sm text-gray-500">
-                    Start typing to search for owners.
+                    Begin met typen om te zoeken naar eigenaren.
                   </div>
                 )}
               </div>
@@ -404,7 +404,7 @@ export default function OwnerSection() {
             size="sm"
             onClick={() => setIsSearching(true)}
           >
-            Select Owner
+            Selecteer eigenaar
           </Button>
           <Button
             type="button"
@@ -413,7 +413,7 @@ export default function OwnerSection() {
             className="text-white"
             onClick={() => setIsCreatingOwner(!isCreatingOwner)}
           >
-            {isCreatingOwner ? "Cancel" : "Create New Owner"}
+            {isCreatingOwner ? "Annuleren" : "Nieuwe eigenaar maken"}
           </Button>
         </div>
       </div>
@@ -421,11 +421,11 @@ export default function OwnerSection() {
       {/* New Owner Form */}
       {isCreatingOwner && (
         <div className="bg-gray-50 p-4 rounded-md border border-gray-200 space-y-4 mt-4">
-          <h3 className="font-medium text-lg">Create New Owner</h3>
+          <h3 className="font-medium text-lg">Nieuwe eigenaar aanmaken</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">Voornaam</Label>
               <Input
                 id="firstName"
                 name="firstName"
@@ -435,7 +435,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">Achternaam</Label>
               <Input
                 id="lastName"
                 name="lastName"
@@ -445,7 +445,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="companyName">Company Name</Label>
+              <Label htmlFor="companyName">Bedrijfsnaam</Label>
               <Input
                 id="companyName"
                 name="companyName"
@@ -455,7 +455,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-mail</Label>
               <Input
                 id="email"
                 name="email"
@@ -466,7 +466,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="phone">Phone</Label>
+              <Label htmlFor="phone">Telefoon</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -477,7 +477,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="streetname">Street</Label>
+              <Label htmlFor="streetname">Straat</Label>
               <div className="flex gap-2 mt-1">
                 <Input
                   id="streetname"
@@ -492,12 +492,12 @@ export default function OwnerSection() {
                   value={newOwnerData.housenumber}
                   onChange={handleNewOwnerInputChange}
                   className="w-24"
-                  placeholder="No."
+                  placeholder="Nr."
                 />
               </div>
             </div>
             <div>
-              <Label htmlFor="postalCode">Postal Code</Label>
+              <Label htmlFor="postalCode">Postcode</Label>
               <Input
                 id="postalCode"
                 name="postalCode"
@@ -507,7 +507,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">Plaats</Label>
               <Input
                 id="city"
                 name="city"
@@ -517,7 +517,7 @@ export default function OwnerSection() {
               />
             </div>
             <div>
-              <Label htmlFor="countryId">Country</Label>
+              <Label htmlFor="countryId">Land</Label>
               <Select
                 onValueChange={(value) =>
                   handleNewOwnerSelectChange("countryId", value)
@@ -525,7 +525,7 @@ export default function OwnerSection() {
                 defaultValue={String(newOwnerData.countryId)}
               >
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select country" />
+                  <SelectValue placeholder="Selecteer land" />
                 </SelectTrigger>
                 <SelectContent>
                   {countries.map((country) => (
@@ -537,7 +537,7 @@ export default function OwnerSection() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="languageId">Language</Label>
+              <Label htmlFor="languageId">Taal</Label>
               <Select
                 onValueChange={(value) =>
                   handleNewOwnerSelectChange("languageId", value)
@@ -545,7 +545,7 @@ export default function OwnerSection() {
                 defaultValue={String(newOwnerData.languageId)}
               >
                 <SelectTrigger className="mt-1">
-                  <SelectValue placeholder="Select language" />
+                  <SelectValue placeholder="Selecteer taal" />
                 </SelectTrigger>
                 <SelectContent>
                   {languages.map((language) => (
@@ -564,7 +564,7 @@ export default function OwnerSection() {
               variant="outline"
               onClick={() => setIsCreatingOwner(false)}
             >
-              Cancel
+              Annuleren
             </Button>
             <Button
               type="button"
@@ -574,11 +574,11 @@ export default function OwnerSection() {
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Aanmaken...
                 </>
               ) : (
                 <>
-                  <Plus className="mr-2 h-4 w-4" /> Create Owner
+                  <Plus className="mr-2 h-4 w-4" /> Eigenaar aanmaken
                 </>
               )}
             </Button>
@@ -596,18 +596,20 @@ export default function OwnerSection() {
           onChange={handleInputChange}
           className="h-4 w-4"
         />
-        <Label htmlFor="availableInPortal">Available in owner portal</Label>
+        <Label htmlFor="availableInPortal">
+          Beschikbaar in eigenaarsportaal
+        </Label>
       </div>
 
       {/* Commission Agreements */}
       <div>
-        <Label htmlFor="commissionAgreements">Commission agreements</Label>
+        <Label htmlFor="commissionAgreements">Commissie-afspraken</Label>
         <div className="flex flex-col gap-2">
           <Input
             id="commissionAgreements"
             name="commissionAgreements"
             type="text"
-            placeholder="Enter commission details"
+            placeholder="Voer commissiedetails in"
             value={formData.commissionAgreements}
             onChange={handleInputChange}
           />
@@ -617,7 +619,7 @@ export default function OwnerSection() {
             size="sm"
             className="self-start text-white"
           >
-            Add Agreement
+            Afspraak toevoegen
           </Button>
         </div>
       </div>
@@ -628,12 +630,12 @@ export default function OwnerSection() {
           href="/knowledge-base"
           className="text-blue-600 hover:text-blue-800 hover:underline"
         >
-          Go to knowledge base article
+          Ga naar kennisbank artikel
         </Link>
       </div>
 
       <Button type="submit" className="bg-primary text-white">
-        Save
+        Opslaan
       </Button>
     </form>
   );

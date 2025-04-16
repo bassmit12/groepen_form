@@ -45,9 +45,7 @@ export default function FeaturesSection({
 
   // Helper function to extract and sort feature groups
   const extractGroups = (features: Feature[]): string[] => {
-    return [
-      ...new Set(features.map((f) => f?.featuregroup || "Unknown")),
-    ].sort();
+    return [...new Set(features.map((f) => f?.featuregroup || "Unknown"))].sort();
   };
 
   // Fetch features on component mount
@@ -83,7 +81,7 @@ export default function FeaturesSection({
         }
       } catch (err) {
         setError(
-          err instanceof Error ? err.message : "An unknown error occurred",
+          err instanceof Error ? err.message : "An unknown error occurred"
         );
         console.error("Error fetching features:", err);
       } finally {
@@ -112,7 +110,7 @@ export default function FeaturesSection({
       const filtered = features.filter(
         (feature) =>
           (feature.name?.toLowerCase() || "").includes(query) ||
-          (feature.featuregroup?.toLowerCase() || "").includes(query),
+          (feature.featuregroup?.toLowerCase() || "").includes(query)
       );
       setFilteredFeatures(filtered);
       setIsSearchMode(true);
@@ -185,7 +183,7 @@ export default function FeaturesSection({
     if (onComplete) {
       onComplete(selectedFeatures);
     } else {
-      alert("Features saved! Check console for details.");
+      alert("Kenmerken opgeslagen! Controleer de console voor details.");
     }
   };
 
@@ -194,7 +192,7 @@ export default function FeaturesSection({
       onSubmit={handleSubmit}
       className={standalone ? "" : "space-y-6 p-6 bg-white rounded-md shadow"}
     >
-      {!standalone && <h2 className="text-2xl font-bold">Features</h2>}
+      {!standalone && <h2 className="text-2xl font-bold">Kenmerken</h2>}
 
       {/* Search bar */}
       <div className="relative">
@@ -204,7 +202,7 @@ export default function FeaturesSection({
         />
         <Input
           type="text"
-          placeholder="Search features..."
+          placeholder="Zoek kenmerken..."
           value={searchQuery}
           onChange={handleSearchChange}
           className="pl-10 pr-10 py-2"
@@ -224,7 +222,7 @@ export default function FeaturesSection({
       {selectedFeatures.length > 0 && (
         <div className="mt-4">
           <Label className="font-medium mb-2 block">
-            Selected Features ({selectedFeatures.length})
+            Geselecteerde kenmerken ({selectedFeatures.length})
           </Label>
           <div className="flex flex-wrap gap-2">
             {selectedFeatures.map((feature) => (
@@ -251,18 +249,16 @@ export default function FeaturesSection({
         {loading ? (
           <div className="flex justify-center items-center py-10">
             <Loader2 className="animate-spin h-8 w-8 text-primary" />
-            <span className="ml-2">Loading features...</span>
+            <span className="ml-2">Kenmerken laden...</span>
           </div>
         ) : error ? (
-          <p className="text-red-500 p-4 bg-red-50 rounded-md">
-            Error: {error}
-          </p>
+          <p className="text-red-500 p-4 bg-red-50 rounded-md">Fout: {error}</p>
         ) : filteredFeatures.length === 0 ? (
           <div className="text-center py-8 border rounded-md bg-gray-50">
             <p className="text-gray-500 mb-4">
               {searchQuery
-                ? `No features found for "${searchQuery}"`
-                : "No features available"}
+                ? `Geen kenmerken gevonden voor "${searchQuery}"`
+                : "Geen kenmerken beschikbaar"}
             </p>
             {searchQuery && (
               <Button
@@ -271,7 +267,7 @@ export default function FeaturesSection({
                 className="flex items-center gap-2"
               >
                 <PlusCircle size={16} />
-                Create {searchQuery} as a new feature
+                Maak {searchQuery} als nieuw kenmerk
               </Button>
             )}
           </div>
@@ -280,7 +276,7 @@ export default function FeaturesSection({
           <div className="border rounded-md overflow-hidden">
             <div className="p-3 border-b bg-gray-50 flex justify-between items-center">
               <div className="font-medium text-sm">
-                Search Results: {filteredFeatures.length} features found
+                Zoekresultaten: {filteredFeatures.length} kenmerken gevonden
               </div>
               <Button
                 variant="ghost"
@@ -288,7 +284,7 @@ export default function FeaturesSection({
                 onClick={clearSearch}
                 className="text-sm"
               >
-                <X className="h-4 w-4 mr-1" /> Clear Search
+                <X className="h-4 w-4 mr-1" /> Zoeken wissen
               </Button>
             </div>
 
@@ -306,7 +302,7 @@ export default function FeaturesSection({
                       <Checkbox
                         id={`feature-${feature.id}`}
                         checked={selectedFeatures.some(
-                          (f) => f.id === feature.id,
+                          (f) => f.id === feature.id
                         )}
                         onCheckedChange={() => handleFeatureSelect(feature)}
                       />
@@ -328,7 +324,7 @@ export default function FeaturesSection({
             {/* Group navigation */}
             <div className="w-1/3 bg-gray-50 border-r">
               <div className="p-2 font-medium text-sm text-gray-500">
-                Feature Groups ({sortedGroups.length})
+                Kenmerkgroepen ({sortedGroups.length})
               </div>
               <div className="max-h-80 overflow-y-auto">
                 {sortedGroups.map((group) => (
@@ -352,8 +348,10 @@ export default function FeaturesSection({
             <div className="w-2/3">
               <div className="p-2 font-medium text-sm text-gray-500">
                 {activeGroup
-                  ? `${activeGroup} Features (${groupedFeatures[activeGroup]?.length || 0})`
-                  : "Features"}
+                  ? `${activeGroup} kenmerken (${
+                      groupedFeatures[activeGroup]?.length || 0
+                    })`
+                  : "Kenmerken"}
               </div>
               <div className="max-h-80 overflow-y-auto">
                 {activeGroup ? (
@@ -365,7 +363,7 @@ export default function FeaturesSection({
                       <Checkbox
                         id={`feature-${feature.id}`}
                         checked={selectedFeatures.some(
-                          (f) => f.id === feature.id,
+                          (f) => f.id === feature.id
                         )}
                         onCheckedChange={() => handleFeatureSelect(feature)}
                       />
@@ -379,7 +377,7 @@ export default function FeaturesSection({
                   ))
                 ) : (
                   <div className="p-4 text-center text-gray-500">
-                    Select a group to view features
+                    Selecteer een groep om kenmerken te bekijken
                   </div>
                 )}
               </div>
@@ -391,7 +389,7 @@ export default function FeaturesSection({
       {/* Only show the Save button when not in standalone mode */}
       {!standalone && (
         <Button type="submit" className="bg-primary text-white">
-          Save Features
+          Kenmerken opslaan
         </Button>
       )}
     </form>

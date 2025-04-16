@@ -61,7 +61,7 @@ export default function GeneralSettingsSection() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("General Settings data:", formData);
-    alert("Form submitted! Check console for data.");
+    alert("Formulier ingediend! Controleer de console voor gegevens.");
   };
 
   return (
@@ -69,15 +69,15 @@ export default function GeneralSettingsSection() {
       onSubmit={handleSubmit}
       className="space-y-6 p-6 bg-white rounded-md shadow"
     >
-      <h2 className="text-2xl font-bold">General Settings</h2>
+      <h2 className="text-2xl font-bold">Algemene instellingen</h2>
 
       {/* Name */}
       <div>
-        <Label htmlFor="name">Name</Label>
+        <Label htmlFor="name">Naam</Label>
         <Input
           id="name"
           name="name"
-          placeholder="This is the internal name, displayed within Bookzo"
+          placeholder="Dit is de interne naam, weergegeven binnen Bookzo"
           value={formData.name}
           onChange={handleInputChange}
           type="text"
@@ -86,7 +86,7 @@ export default function GeneralSettingsSection() {
 
       {/* Group */}
       <div>
-        <Label htmlFor="group">Group</Label>
+        <Label htmlFor="group">Groep</Label>
         <Input
           id="group"
           name="group"
@@ -98,7 +98,7 @@ export default function GeneralSettingsSection() {
 
       {/* Online / Offline */}
       <div>
-        <Label className="mb-1">Online available</Label>
+        <Label className="mb-1">Online beschikbaar</Label>
         <RadioGroup
           value={formData.online}
           onValueChange={(val) =>
@@ -119,7 +119,7 @@ export default function GeneralSettingsSection() {
 
       {/* Person */}
       <div>
-        <Label htmlFor="person">Person</Label>
+        <Label htmlFor="person">Persoon</Label>
         <Input
           id="person"
           name="person"
@@ -131,7 +131,7 @@ export default function GeneralSettingsSection() {
 
       {/* Minimum number of guests */}
       <div>
-        <Label htmlFor="minGuests">Minimum number of guests</Label>
+        <Label htmlFor="minGuests">Minimaal aantal gasten</Label>
         <Input
           id="minGuests"
           name="minGuests"
@@ -143,7 +143,7 @@ export default function GeneralSettingsSection() {
 
       {/* Maximum number of guests */}
       <div>
-        <Label htmlFor="maxGuests">Maximum number of guests</Label>
+        <Label htmlFor="maxGuests">Maximaal aantal gasten</Label>
         <Input
           id="maxGuests"
           name="maxGuests"
@@ -156,7 +156,7 @@ export default function GeneralSettingsSection() {
       {/* Number of persons included in rent */}
       <div>
         <Label htmlFor="personsIncluded">
-          Number of persons included in rent
+          Aantal personen inbegrepen in de huur
         </Label>
         <Input
           id="personsIncluded"
@@ -177,12 +177,12 @@ export default function GeneralSettingsSection() {
           onChange={handleInputChange}
           className="h-4 w-4"
         />
-        <Label htmlFor="petsAllowed">Are pets allowed?</Label>
+        <Label htmlFor="petsAllowed">Zijn huisdieren toegestaan?</Label>
       </div>
 
       {/* Arrival time */}
       <div>
-        <Label htmlFor="arrivalTime">Arrival time</Label>
+        <Label htmlFor="arrivalTime">Aankomsttijd</Label>
         <Input
           id="arrivalTime"
           name="arrivalTime"
@@ -203,13 +203,13 @@ export default function GeneralSettingsSection() {
           className="h-4 w-4"
         />
         <Label htmlFor="differentArrivalTimes">
-          Different arrival times per day
+          Verschillende aankomsttijden per dag
         </Label>
       </div>
 
       {/* Departure time */}
       <div>
-        <Label htmlFor="departureTime">Departure time</Label>
+        <Label htmlFor="departureTime">Vertrektijd</Label>
         <Input
           id="departureTime"
           name="departureTime"
@@ -230,13 +230,13 @@ export default function GeneralSettingsSection() {
           className="h-4 w-4"
         />
         <Label htmlFor="differentDepartureTimes">
-          Different departure times per day
+          Verschillende vertrektijden per dag
         </Label>
       </div>
 
       {/* Number of parkings */}
       <div>
-        <Label htmlFor="parkings">Number of parkings</Label>
+        <Label htmlFor="parkings">Aantal parkeerplaatsen</Label>
         <Input
           id="parkings"
           name="parkings"
@@ -248,7 +248,7 @@ export default function GeneralSettingsSection() {
 
       {/* Color */}
       <div>
-        <Label htmlFor="color">Color</Label>
+        <Label htmlFor="color">Kleur</Label>
         <Input
           id="color"
           name="color"
@@ -260,7 +260,7 @@ export default function GeneralSettingsSection() {
 
       {/* Linked accommodations */}
       <div>
-        <Label htmlFor="linkedAccommodations">Linked accommodations</Label>
+        <Label htmlFor="linkedAccommodations">Gekoppelde accommodaties</Label>
         <Input
           id="linkedAccommodations"
           name="linkedAccommodations"
@@ -280,11 +280,11 @@ export default function GeneralSettingsSection() {
           onChange={handleInputChange}
           className="h-4 w-4"
         />
-        <Label htmlFor="archive">Archive</Label>
+        <Label htmlFor="archive">Archiveren</Label>
       </div>
 
       <Button type="submit" className="bg-primary text-white">
-        Save
+        Opslaan
       </Button>
     </form>
   );

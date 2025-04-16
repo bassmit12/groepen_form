@@ -13,7 +13,9 @@ async function getToken(): Promise<string | null> {
     }
 
     // Only log first 20 chars and last 5 chars of the token for security
-    const tokenPreview = `${token.substring(0, 20)}...${token.substring(token.length - 5)}`;
+    const tokenPreview = `${token.substring(0, 20)}...${token.substring(
+      token.length - 5
+    )}`;
     console.log("Features route received token preview:", tokenPreview);
 
     return token;
@@ -33,11 +35,11 @@ export async function GET() {
     // Check if required environment variables are defined
     if (!baseUrl || !database || !subscriptionKey) {
       console.error(
-        "Missing required environment variables for API configuration",
+        "Missing required environment variables for API configuration"
       );
       return NextResponse.json(
         { error: "Server configuration error" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -47,7 +49,7 @@ export async function GET() {
     if (!token) {
       return NextResponse.json(
         { error: "Failed to obtain authentication token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -66,7 +68,7 @@ export async function GET() {
 
     if (!response.ok) {
       console.error(
-        `External API error: ${response.status} ${response.statusText}`,
+        `External API error: ${response.status} ${response.statusText}`
       );
       try {
         const errorText = await response.text();
@@ -77,7 +79,7 @@ export async function GET() {
 
       return NextResponse.json(
         { error: `Error fetching features: ${response.statusText}` },
-        { status: response.status },
+        { status: response.status }
       );
     }
 
@@ -93,7 +95,7 @@ export async function GET() {
       console.error("Error parsing API response as JSON:", error);
       return NextResponse.json(
         { error: "Invalid response format from API" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -102,7 +104,7 @@ export async function GET() {
       console.error("API response is not an object:", data);
       return NextResponse.json(
         { error: "Invalid API response format" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -121,13 +123,45 @@ export async function GET() {
       }
     }
 
-    console.log(`Successfully fetched ${data.results?.length || 0} features`);
+    // Define countries to exclude
+    const excludedCountries = [
+      "Aruba",
+      "België",
+      "Curaçao",
+      "Duitsland",
+      "Frankrijk",
+      "Italië",
+      "Nederland",
+      "Oostenrijk",
+      "Portugal",
+      "Spanje",
+    ];
+
+    // Filter out features belonging to country categories
+    if (data.results && Array.isArray(data.results)) {
+      const originalCount = data.results.length;
+      data.results = data.results.filter(
+        (feature: { featuregroup?: string }) =>
+          !excludedCountries.includes(feature.featuregroup || "")
+      );
+      console.log(
+        `Filtered out ${
+          originalCount - data.results.length
+        } features from country categories`
+      );
+    }
+
+    console.log(
+      `Successfully fetched ${
+        data.results?.length || 0
+      } features after filtering`
+    );
 
     // Log the first few features to verify data structure
     if (data.results && data.results.length > 0) {
       console.log(
         "First 3 features:",
-        JSON.stringify(data.results.slice(0, 3), null, 2),
+        JSON.stringify(data.results.slice(0, 3), null, 2)
       );
 
       // Log unique feature groups
@@ -138,12 +172,12 @@ export async function GET() {
 
       const groups = [
         ...new Set(
-          data.results.map((f: Feature) => f.featuregroup || "Unknown"),
+          data.results.map((f: Feature) => f.featuregroup || "Unknown")
         ),
       ];
       console.log(
         `Found ${groups.length} feature groups:`,
-        groups.slice(0, 10).join(", "),
+        groups.slice(0, 10).join(", ")
       );
     }
 
@@ -155,7 +189,7 @@ export async function GET() {
         error: "Internal Server Error",
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

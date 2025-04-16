@@ -53,18 +53,18 @@ interface Room {
 }
 
 const roomTypes = [
-  "Bedroom",
-  "Living Room",
-  "Kitchen",
-  "Bathroom",
-  "Dining Room",
-  "Recreation Room",
-  "Game Room",
-  "Conference Room",
+  "Slaapkamer",
+  "Woonkamer",
+  "Keuken",
+  "Badkamer",
+  "Eetkamer",
+  "Recreatieruimte",
+  "Speelkamer",
+  "Vergaderruimte",
   "Sauna",
-  "Swimming Pool",
-  "Terrace",
-  "Other",
+  "Zwembad",
+  "Terras",
+  "Overig",
 ];
 
 export default function RoomsSection() {
@@ -82,7 +82,7 @@ export default function RoomsSection() {
     const newRoom: Room = {
       id: generateRoomId(),
       floor: 0,
-      type: "Bedroom",
+      type: "Slaapkamer",
       additionalInfo: "",
       hasSleepingPlaces: false,
       features: [],
@@ -107,7 +107,7 @@ export default function RoomsSection() {
   // Update room properties
   const updateRoom = (id: string, updates: Partial<Room>) => {
     setRooms(
-      rooms.map((room) => (room.id === id ? { ...room, ...updates } : room)),
+      rooms.map((room) => (room.id === id ? { ...room, ...updates } : room))
     );
   };
 
@@ -129,13 +129,13 @@ export default function RoomsSection() {
   return (
     <div className="space-y-6 p-6 bg-white rounded-md shadow">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Rooms</h2>
+        <h2 className="text-2xl font-bold">Kamers</h2>
         <Button
           onClick={addRoom}
           className="bg-primary text-white flex gap-2 items-center"
         >
           <PlusCircle size={16} />
-          Add Room
+          Kamer toevoegen
         </Button>
       </div>
 
@@ -143,13 +143,13 @@ export default function RoomsSection() {
         <div className="text-center py-10 border border-dashed rounded-lg">
           <BedDouble className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-lg font-medium text-gray-900">
-            No rooms added yet
+            Nog geen kamers toegevoegd
           </h3>
           <p className="mt-1 text-sm text-gray-500">
-            Start by adding a room to this property
+            Begin met het toevoegen van een kamer aan deze accommodatie
           </p>
           <Button onClick={addRoom} className="mt-4 bg-primary text-white">
-            Add First Room
+            Eerste kamer toevoegen
           </Button>
         </div>
       ) : (
@@ -166,11 +166,11 @@ export default function RoomsSection() {
                     <span>{room.type}</span>
                     {room.hasSleepingPlaces && (
                       <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
-                        {room.sleepingCapacity || "?"} sleeping places
+                        {room.sleepingCapacity || "?"} slaapplaatsen
                       </span>
                     )}
                     <span className="text-xs bg-gray-200 px-2 py-0.5 rounded-full">
-                      Floor {room.floor}
+                      Verdieping {room.floor}
                     </span>
                   </CardTitle>
                   <div className="flex items-center gap-2">
@@ -184,7 +184,7 @@ export default function RoomsSection() {
                       }}
                     >
                       <Trash2 className="h-4 w-4 text-red-500" />
-                      <span className="sr-only">Delete</span>
+                      <span className="sr-only">Verwijderen</span>
                     </Button>
                     {expandedRoom === room.id ? (
                       <ChevronUp className="h-5 w-5 text-gray-500" />
@@ -199,7 +199,7 @@ export default function RoomsSection() {
                 <CardContent className="p-4 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <Label htmlFor={`floor-${room.id}`}>Floor</Label>
+                      <Label htmlFor={`floor-${room.id}`}>Verdieping</Label>
                       <Input
                         id={`floor-${room.id}`}
                         type="number"
@@ -213,11 +213,11 @@ export default function RoomsSection() {
                         className="mt-1"
                       />
                       <div className="mt-1 text-xs text-gray-500">
-                        Use negative numbers for basement levels (-1, -2...)
+                        Gebruik negatieve cijfers voor kelderruimtes (-1, -2...)
                       </div>
                     </div>
                     <div>
-                      <Label htmlFor={`type-${room.id}`}>Room Type</Label>
+                      <Label htmlFor={`type-${room.id}`}>Kamertype</Label>
                       <Select
                         value={room.type}
                         onValueChange={(value) =>
@@ -225,7 +225,7 @@ export default function RoomsSection() {
                         }
                       >
                         <SelectTrigger id={`type-${room.id}`} className="mt-1">
-                          <SelectValue placeholder="Select room type" />
+                          <SelectValue placeholder="Selecteer kamertype" />
                         </SelectTrigger>
                         <SelectContent>
                           {roomTypes.map((type) => (
@@ -249,14 +249,14 @@ export default function RoomsSection() {
                           className="mr-2"
                         />
                         <Label htmlFor={`sleeping-${room.id}`}>
-                          Has sleeping places
+                          Heeft slaapplaatsen
                         </Label>
                       </div>
 
                       {room.hasSleepingPlaces && (
                         <div className="mt-2">
                           <Label htmlFor={`capacity-${room.id}`}>
-                            Sleeping capacity
+                            Slaapplaatsen capaciteit
                           </Label>
                           <Input
                             id={`capacity-${room.id}`}
@@ -270,7 +270,7 @@ export default function RoomsSection() {
                             }
                             min={1}
                             className="mt-1"
-                            placeholder="Number of beds/places"
+                            placeholder="Aantal bedden/plaatsen"
                           />
                         </div>
                       )}
@@ -279,7 +279,7 @@ export default function RoomsSection() {
 
                   <div>
                     <Label htmlFor={`info-${room.id}`}>
-                      Additional Information
+                      Aanvullende informatie
                     </Label>
                     <Textarea
                       id={`info-${room.id}`}
@@ -288,13 +288,13 @@ export default function RoomsSection() {
                         updateRoom(room.id, { additionalInfo: e.target.value })
                       }
                       className="mt-1 min-h-[80px]"
-                      placeholder="Additional details about this room..."
+                      placeholder="Aanvullende details over deze kamer..."
                     />
                   </div>
 
                   <div>
                     <div className="flex justify-between items-center mb-2">
-                      <Label>Room Features</Label>
+                      <Label>Kamerkenmerken</Label>
                       <Button
                         variant="outline"
                         size="sm"
@@ -302,7 +302,7 @@ export default function RoomsSection() {
                         onClick={() => openFeaturesDialog(room)}
                       >
                         <Edit size={14} />
-                        Manage Features
+                        Kenmerken beheren
                       </Button>
                     </div>
 
@@ -319,7 +319,7 @@ export default function RoomsSection() {
                       </div>
                     ) : (
                       <div className="text-sm text-gray-500 italic">
-                        No features selected for this room
+                        Geen kenmerken geselecteerd voor deze kamer
                       </div>
                     )}
                   </div>
@@ -334,7 +334,9 @@ export default function RoomsSection() {
       <Dialog open={showFeatureDialog} onOpenChange={setShowFeatureDialog}>
         <DialogContent className="max-w-3xl max-h-[90vh] overflow-auto">
           <DialogHeader>
-            <DialogTitle>Select Features for {editingRoom?.type}</DialogTitle>
+            <DialogTitle>
+              Selecteer kenmerken voor {editingRoom?.type}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="mt-4">
@@ -353,7 +355,7 @@ export default function RoomsSection() {
               variant="outline"
               onClick={() => setShowFeatureDialog(false)}
             >
-              Cancel
+              Annuleren
             </Button>
             <Button
               className="bg-primary text-white"
@@ -363,7 +365,7 @@ export default function RoomsSection() {
                 }
               }}
             >
-              Save Features
+              Kenmerken opslaan
             </Button>
           </div>
         </DialogContent>
