@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Facebook, Twitter, Instagram } from "lucide-react";
 
 const Footer = () => {

@@ -45,7 +45,9 @@ export default function FeaturesSection({
 
   // Helper function to extract and sort feature groups
   const extractGroups = (features: Feature[]): string[] => {
-    return [...new Set(features.map((f) => f?.featuregroup || "Unknown"))].sort();
+    return [
+      ...new Set(features.map((f) => f?.featuregroup || "Unknown")),
+    ].sort();
   };
 
   // Fetch features on component mount
