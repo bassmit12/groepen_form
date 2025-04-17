@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import GeneralSettingsSection from "./FormSections/general-settings-section";
+import AccommodationSection from "./FormSections/accommodation-section";
 import OwnerSection from "./FormSections/owner-section";
 import FeaturesSection from "./FormSections/features-section";
 import RoomsSection from "./FormSections/rooms-section";
@@ -36,8 +36,8 @@ const sections: SectionType[] = [
     component: <OwnerSection />,
   },
   {
-    title: "Algemene instellingen",
-    component: <GeneralSettingsSection />,
+    title: "Accommodatie",
+    component: <AccommodationSection />,
   },
   {
     title: "Kenmerken",
@@ -46,12 +46,6 @@ const sections: SectionType[] = [
   {
     title: "Kamers",
     component: <RoomsSection />,
-  },
-  {
-    title: "Financieel",
-    fields: [
-      { name: "pricePerNight", label: "Prijs per nacht", type: "number" },
-    ],
   },
 ];
 
