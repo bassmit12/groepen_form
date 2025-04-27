@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -27,39 +28,32 @@ interface Country {
   countryCode: string;
 }
 
-interface NewOwnerData {
-  contactPerson: string;
-  firstName: string;
-  lastName: string;
-  companyName: string;
+interface OwnerData {
+  id?: number;
+  name: string;
+  address: string;
+  contactDetails: string;
   email: string;
   phone: string;
-  streetname: string;
-  housenumber: string;
-  city: string;
-  postalCode: string;
-  countryId: number;
-  languageId: number;
+  companyName?: string;
+  countryId?: number;
+  languageId?: number;
 }
 
-export default function OwnerSection() {
-  // State for the new owner form
+interface OwnerSectionProps {
+  ownerData: OwnerData;
+  onChange: (data: OwnerData) => void;
+  hideSubmitButton?: boolean;
+}
+
+export default function OwnerSection({
+  ownerData,
+  onChange,
+  hideSubmitButton = false,
+}: OwnerSectionProps) {
+  // State for form
   const [countries, setCountries] = useState<Country[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [newOwnerData, setNewOwnerData] = useState<NewOwnerData>({
-    contactPerson: "",
-    firstName: "",
-    lastName: "",
-    companyName: "",
-    email: "",
-    phone: "",
-    streetname: "",
-    housenumber: "",
-    city: "",
-    postalCode: "",
-    countryId: 136, // Default to Netherlands
-    languageId: 1, // Default to Dutch
-  });
   const [isLoading, setIsLoading] = useState(false);
 
   // Fetch countries and languages when component mounts
@@ -98,67 +92,43 @@ export default function OwnerSection() {
     }
   };
 
-  // Handle input changes for new owner form
-  const handleNewOwnerInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
+  // Handle input changes
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setNewOwnerData((prev) => ({
-      ...prev,
+    const updatedData = {
+      ...ownerData,
       [name]: value,
-    }));
+    };
+    onChange(updatedData);
   };
 
-  // Handle new owner select changes
-  const handleNewOwnerSelectChange = (name: string, value: string) => {
-    setNewOwnerData((prev) => ({
-      ...prev,
+  // Handle select changes
+  const handleSelectChange = (name: string, value: string) => {
+    const updatedData = {
+      ...ownerData,
       [name]: parseInt(value),
-    }));
+    };
+    onChange(updatedData);
   };
 
-  // Create a new owner
+  // Create a new owner (standalone mode)
   const handleCreateOwner = async () => {
     try {
       setIsLoading(true);
-
-      // Update last name if both provided
-      const updatedData = {
-        ...newOwnerData,
-        contactPerson:
-          newOwnerData.firstName && newOwnerData.lastName
-            ? `${newOwnerData.firstName} ${newOwnerData.lastName}`
-            : newOwnerData.contactPerson,
-      };
 
       const response = await fetch("/api/owners", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(ownerData),
       });
 
       if (response.ok) {
         const newOwner = await response.json();
         console.log("New owner created:", newOwner);
-
-        // Reset new owner form
-        setNewOwnerData({
-          contactPerson: "",
-          firstName: "",
-          lastName: "",
-          companyName: "",
-          email: "",
-          phone: "",
-          streetname: "",
-          housenumber: "",
-          city: "",
-          postalCode: "",
-          countryId: 136,
-          languageId: 1,
-        });
-
         alert("Eigenaar succesvol aangemaakt!");
       } else {
         console.error("Error creating owner:", await response.text());
@@ -185,29 +155,18 @@ export default function OwnerSection() {
     >
       <h2 className="text-2xl font-bold">Eigenaar</h2>
 
-      {/* New Owner Form */}
-      <div className="bg-gray-50 p-4 rounded-md border border-gray-200 space-y-4">
-        <h3 className="font-medium text-lg">Nieuwe eigenaar aanmaken</h3>
-
+      {/* Owner Form */}
+      <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="firstName">Voornaam</Label>
+            <Label htmlFor="name">Naam *</Label>
             <Input
-              id="firstName"
-              name="firstName"
-              value={newOwnerData.firstName}
-              onChange={handleNewOwnerInputChange}
+              id="name"
+              name="name"
+              value={ownerData.name}
+              onChange={handleInputChange}
               className="mt-1"
-            />
-          </div>
-          <div>
-            <Label htmlFor="lastName">Achternaam</Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              value={newOwnerData.lastName}
-              onChange={handleNewOwnerInputChange}
-              className="mt-1"
+              required
             />
           </div>
           <div>
@@ -215,8 +174,8 @@ export default function OwnerSection() {
             <Input
               id="companyName"
               name="companyName"
-              value={newOwnerData.companyName}
-              onChange={handleNewOwnerInputChange}
+              value={ownerData.companyName || ""}
+              onChange={handleInputChange}
               className="mt-1"
             />
           </div>
@@ -226,8 +185,8 @@ export default function OwnerSection() {
               id="email"
               name="email"
               type="email"
-              value={newOwnerData.email}
-              onChange={handleNewOwnerInputChange}
+              value={ownerData.email}
+              onChange={handleInputChange}
               className="mt-1"
             />
           </div>
@@ -237,58 +196,36 @@ export default function OwnerSection() {
               id="phone"
               name="phone"
               type="tel"
-              value={newOwnerData.phone}
-              onChange={handleNewOwnerInputChange}
+              value={ownerData.phone}
+              onChange={handleInputChange}
               className="mt-1"
             />
           </div>
-          <div>
-            <Label htmlFor="streetname">Straat</Label>
-            <div className="flex gap-2 mt-1">
-              <Input
-                id="streetname"
-                name="streetname"
-                value={newOwnerData.streetname}
-                onChange={handleNewOwnerInputChange}
-                className="flex-grow"
-              />
-              <Input
-                id="housenumber"
-                name="housenumber"
-                value={newOwnerData.housenumber}
-                onChange={handleNewOwnerInputChange}
-                className="w-24"
-                placeholder="Nr."
-              />
-            </div>
-          </div>
-          <div>
-            <Label htmlFor="postalCode">Postcode</Label>
-            <Input
-              id="postalCode"
-              name="postalCode"
-              value={newOwnerData.postalCode}
-              onChange={handleNewOwnerInputChange}
+          <div className="md:col-span-2">
+            <Label htmlFor="address">Adres</Label>
+            <Textarea
+              id="address"
+              name="address"
+              value={ownerData.address}
+              onChange={handleInputChange}
               className="mt-1"
             />
           </div>
-          <div>
-            <Label htmlFor="city">Plaats</Label>
-            <Input
-              id="city"
-              name="city"
-              value={newOwnerData.city}
-              onChange={handleNewOwnerInputChange}
+          <div className="md:col-span-2">
+            <Label htmlFor="contactDetails">Contactgegevens</Label>
+            <Textarea
+              id="contactDetails"
+              name="contactDetails"
+              value={ownerData.contactDetails}
+              onChange={handleInputChange}
               className="mt-1"
             />
           </div>
           <div>
             <Label htmlFor="countryId">Land</Label>
             <Select
-              onValueChange={(value) =>
-                handleNewOwnerSelectChange("countryId", value)
-              }
-              defaultValue={String(newOwnerData.countryId)}
+              onValueChange={(value) => handleSelectChange("countryId", value)}
+              value={String(ownerData.countryId || 136)}
             >
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Selecteer land" />
@@ -305,10 +242,8 @@ export default function OwnerSection() {
           <div>
             <Label htmlFor="languageId">Taal</Label>
             <Select
-              onValueChange={(value) =>
-                handleNewOwnerSelectChange("languageId", value)
-              }
-              defaultValue={String(newOwnerData.languageId)}
+              onValueChange={(value) => handleSelectChange("languageId", value)}
+              value={String(ownerData.languageId || 1)}
             >
               <SelectTrigger className="mt-1">
                 <SelectValue placeholder="Selecteer taal" />
@@ -325,21 +260,23 @@ export default function OwnerSection() {
         </div>
       </div>
 
-      <Button
-        type="submit"
-        disabled={isLoading}
-        className="bg-primary text-white"
-      >
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Aanmaken...
-          </>
-        ) : (
-          <>
-            <Plus className="mr-2 h-4 w-4" /> Eigenaar aanmaken
-          </>
-        )}
-      </Button>
+      {!hideSubmitButton && (
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="bg-primary text-white"
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Aanmaken...
+            </>
+          ) : (
+            <>
+              <Plus className="mr-2 h-4 w-4" /> Eigenaar aanmaken
+            </>
+          )}
+        </Button>
+      )}
     </form>
   );
 }

@@ -12,11 +12,11 @@ export async function GET() {
     // Check if required environment variables are defined
     if (!baseUrl || !database || !subscriptionKey) {
       console.error(
-        "Missing required environment variables for API configuration",
+        "Missing required environment variables for API configuration"
       );
       return NextResponse.json(
         { error: "Server configuration error" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -25,7 +25,7 @@ export async function GET() {
     if (!token) {
       return NextResponse.json(
         { error: "Failed to obtain authentication token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -41,11 +41,11 @@ export async function GET() {
 
     if (!response.ok) {
       console.error(
-        `External API error: ${response.status} ${response.statusText}`,
+        `External API error: ${response.status} ${response.statusText}`
       );
       return NextResponse.json(
         { error: `Error fetching owners: ${response.statusText}` },
-        { status: response.status },
+        { status: response.status }
       );
     }
 
@@ -58,7 +58,7 @@ export async function GET() {
         error: "Internal Server Error",
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -71,11 +71,11 @@ export async function POST(request: Request) {
 
     if (!baseUrl || !database || !subscriptionKey) {
       console.error(
-        "Missing required environment variables for API configuration",
+        "Missing required environment variables for API configuration"
       );
       return NextResponse.json(
         { error: "Server configuration error" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -83,11 +83,29 @@ export async function POST(request: Request) {
     if (!token) {
       return NextResponse.json(
         { error: "Failed to obtain authentication token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
-    const ownerData = await request.json();
+    // Get owner data from request
+    const requestData = await request.json();
+    console.log("Received owner data:", requestData);
+
+    // Transform data to match API expectations
+    // Using property mapping based on the available data
+    const ownerData = {
+      contactPerson: requestData.name || "",
+      companyName: requestData.companyName || "",
+      email: requestData.email || "",
+      phone: requestData.phone || "",
+      streetname: requestData.address?.split(",")[0] || "",
+      city: requestData.address?.split(",")[1]?.trim() || "",
+      postalCode: requestData.postalCode || "",
+      countryId: requestData.countryId || 136, // Default to Netherlands
+      languageId: requestData.languageId || 1, // Default to Dutch
+    };
+
+    console.log("Transformed owner data:", ownerData);
 
     const response = await fetch(`${baseUrl}/${database}/owners`, {
       method: "POST",
@@ -95,19 +113,23 @@ export async function POST(request: Request) {
         Authorization: `Bearer ${token}`,
         "x-subscription-key": subscriptionKey,
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify(ownerData),
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
       console.error(
         `External API error: ${response.status} ${response.statusText}`,
+        errorText
       );
-      const errorText = await response.text();
-      console.error("Error response:", errorText);
       return NextResponse.json(
-        { error: `Error creating owner: ${response.statusText}` },
-        { status: response.status },
+        {
+          error: `Error creating owner: ${response.statusText}`,
+          details: errorText,
+        },
+        { status: response.status }
       );
     }
 
@@ -120,7 +142,7 @@ export async function POST(request: Request) {
         error: "Internal Server Error",
         details: error instanceof Error ? error.message : String(error),
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

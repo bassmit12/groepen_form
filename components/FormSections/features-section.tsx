@@ -23,12 +23,14 @@ interface FeaturesSectionProps {
   initialSelected?: Feature[];
   onComplete?: (selectedFeatures: Feature[]) => void;
   standalone?: boolean;
+  hideSubmitButton?: boolean;
 }
 
 export default function FeaturesSection({
   initialSelected = [],
   onComplete,
   standalone = false,
+  hideSubmitButton = false,
 }: FeaturesSectionProps) {
   const [features, setFeatures] = useState<Feature[]>([]);
   const [filteredFeatures, setFilteredFeatures] = useState<Feature[]>([]);
@@ -52,6 +54,144 @@ export default function FeaturesSection({
 
   // Fetch features on component mount
   useEffect(() => {
+    // Fallback data function for demonstration or when API fails
+    const setFallbackData = () => {
+      const sampleData: Feature[] = [
+        {
+          id: 1,
+          name: "WiFi",
+          featuregroup: "Algemeen",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "100",
+        },
+        {
+          id: 2,
+          name: "Zwembad",
+          featuregroup: "Recreatie",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "200",
+        },
+        {
+          id: 3,
+          name: "Sauna",
+          featuregroup: "Recreatie",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "200",
+        },
+        {
+          id: 4,
+          name: "Vaatwasser",
+          featuregroup: "Keuken",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "300",
+        },
+        {
+          id: 5,
+          name: "Koelkast",
+          featuregroup: "Keuken",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "300",
+        },
+        {
+          id: 6,
+          name: "Inductiekookplaat",
+          featuregroup: "Keuken",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "300",
+        },
+        {
+          id: 7,
+          name: "TV",
+          featuregroup: "Entertainment",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "400",
+        },
+        {
+          id: 8,
+          name: "Speeltoestellen",
+          featuregroup: "Buitenfaciliteiten",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "500",
+        },
+        {
+          id: 9,
+          name: "Terras",
+          featuregroup: "Buitenfaciliteiten",
+          useForFilter: true,
+          featureDataType: 0,
+          defaultValue: "",
+          sortOrder: "500",
+        },
+        {
+          id: 10,
+          name: "Parkeerplaats",
+          featuregroup: "Buitenfaciliteiten",
+          useForFilter: true,
+          featureDataType: 1,
+          defaultValue: "2",
+          sortOrder: "500",
+        },
+        {
+          id: 11,
+          name: "Douche",
+          featuregroup: "Sanitair",
+          useForFilter: true,
+          featureDataType: 1,
+          defaultValue: "3",
+          sortOrder: "600",
+        },
+        {
+          id: 12,
+          name: "Toilet",
+          featuregroup: "Sanitair",
+          useForFilter: true,
+          featureDataType: 1,
+          defaultValue: "2",
+          sortOrder: "600",
+        },
+      ];
+
+      // Set some example selected features
+      const exampleSelected: Feature[] = [
+        sampleData[0], // WiFi
+        sampleData[1], // Zwembad
+        sampleData[4], // Koelkast
+        sampleData[8], // Terras
+      ];
+
+      setFeatures(sampleData);
+      setFilteredFeatures(sampleData);
+
+      // If no initialSelected was provided, use our example
+      if (initialSelected.length === 0) {
+        setSelectedFeatures(exampleSelected);
+      }
+
+      // Set the first group as active
+      const groups = extractGroups(sampleData);
+      if (groups.length > 0) {
+        setActiveGroup(groups[0]);
+      }
+
+      console.log("Using fallback features data with example selections");
+    };
+
     const fetchFeatures = async () => {
       try {
         setLoading(true);
@@ -79,6 +219,7 @@ export default function FeaturesSection({
           console.log(`Loaded ${data.results.length} features`);
         } else {
           console.error("Invalid API response format:", data);
+          setFallbackData(); // Use fallback data if API response is invalid
           throw new Error("Invalid API response format");
         }
       } catch (err) {
@@ -86,13 +227,14 @@ export default function FeaturesSection({
           err instanceof Error ? err.message : "An unknown error occurred"
         );
         console.error("Error fetching features:", err);
+        setFallbackData(); // Use fallback data on error
       } finally {
         setLoading(false);
       }
     };
 
     fetchFeatures();
-  }, []);
+  }, [initialSelected]); // Only dependency is initialSelected
 
   // Filter features based on search query
   useEffect(() => {
@@ -389,7 +531,7 @@ export default function FeaturesSection({
       </div>
 
       {/* Only show the Save button when not in standalone mode */}
-      {!standalone && (
+      {!standalone && !hideSubmitButton && (
         <Button type="submit" className="bg-primary text-white">
           Kenmerken opslaan
         </Button>

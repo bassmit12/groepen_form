@@ -1,4 +1,3 @@
-// groepen\app\api\features\route.ts
 import { NextResponse } from "next/server";
 import { getTokenFromApi } from "../token/tokenUtils";
 
