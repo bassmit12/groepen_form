@@ -156,7 +156,7 @@ export default function MultiSectionForm() {
     const typedAccommodation: FormState["accommodation"] = {
       ...mockAccommodations[index],
       // Ensure the online property is properly typed as "online" | "offline"
-      online: mockAccommodations[index].online as "online" | "offline"
+      online: mockAccommodations[index].online as "online" | "offline",
     };
 
     setFormState({
@@ -281,12 +281,44 @@ export default function MultiSectionForm() {
             if (formState.roomFeatures[i]) {
               // Use the roomFeatures data to save to the API
               // This is a placeholder until the actual API endpoint is implemented
-              console.log(`Would save room features for room ${rooms[i].id}:`, formState.roomFeatures[i]);
-              
+              console.log(
+                `Would save room features for room ${rooms[i].id}:`,
+                formState.roomFeatures[i]
+              );
+
               // Handle room features save logic here (endpoint not shown in context)
-              // ... room features save logic ...
             }
           }
+        }
+      }
+
+      // 6. Send confirmation email to the owner
+      if (formState.owner.email) {
+        try {
+          const emailData = {
+            recipient: formState.owner.email,
+            ownerData: formState.owner,
+            accommodationData: formState.accommodation,
+            features: formState.features,
+            rooms: formState.rooms,
+          };
+
+          const emailResponse = await fetch("/api/email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(emailData),
+          });
+
+          if (emailResponse.ok) {
+            toast.success("Bevestigingsmail verstuurd naar " + formState.owner.email);
+          } else {
+            // If email fails, still consider the form submission successful
+            console.error("Failed to send confirmation email:", await emailResponse.text());
+            toast.warning("Kon geen bevestigingsmail versturen, maar gegevens zijn wel opgeslagen");
+          }
+        } catch (emailError) {
+          console.error("Error sending confirmation email:", emailError);
+          toast.warning("Kon geen bevestigingsmail versturen, maar gegevens zijn wel opgeslagen");
         }
       }
 
